@@ -1,0 +1,35 @@
+
+---- Proyecto Control de Stock --
+Configuracion de proyecto usando Eclipse
+
+Clic en File --> New --> Maven project --> seleccionar Create a simple project
+y ver que tenga seleccionado Use default workspace location o elegir ubicacion donde
+se guardará el proyecto. luego --> clic en next ->
+Agregar lo siguiente en:  Group Id: com.alura   Artifact Id: control-de-stock
+Luego clic en finish.
+
+--Clic derecho sobre el proyecto --> Properties --> Java Build Path --> clic
+en --> libraries --> Si esta en JRE System library 1.5  --> clic derecho en Edit
+--> Clic en Workspace default JRE(jdk-17.0.4.1) para seleccionarlo --> clic en 
+finish --> Clic en Apply and Close.
+
+
+Abrir el pom.xml: escribir el nombre del proyecto y descripcion.
+En el pom va a ir todas las data, configuraciones, dependencias o librerias a 
+utilizar en el proyecto.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
