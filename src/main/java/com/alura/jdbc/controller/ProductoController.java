@@ -121,20 +121,54 @@ public class ProductoController {
 	
 
     public void guardar(Map<String, String> producto) throws SQLException {
-		Connection con = new ConnectionFactory().recuperaConexion();
-			
+    	
+    	//Funciona este Bloque1.
+    	//Connection con = new ConnectionFactory().recuperaConexion();
+
 		//Opcion de Insert Para evitar SQL Injection utilizando PreparedStatement: ingresar:  Mouse'  con el signo '  genera error por en en SQL las comillas simples '' señalan un String 
 		//COn esto pasamos la seguridad al JDBC
 		//El PreparedStatement se encarga de normalizar el texto ingresado como texto común. SI se agrega un ' el lo agrega asi.
+	/*
 		PreparedStatement statement = con.prepareStatement("INSERT INTO PRODUCTO (nombre, descripcion, cantidad)"
 					+ " VALUES (?, ?, ?)",
 					Statement.RETURN_GENERATED_KEYS);
 					statement.setString(1, producto.get("NOMBRE"));
 					statement.setString(2, producto.get("DESCRIPCION"));
-					statement.setInt(3, Integer.valueOf(producto.get("CANTIDAD")));
-					
+					statement.setInt(3, Integer.valueOf(producto.get("CANTIDAD")));					
 					statement.execute();
+		
+	*/
+		
+	//Bloque de codigo anterior pero con Regla de negocio: 
+	//Codigo para cumplir la regla de negocio: Soporta 50 cajas de un producto por registro. Si se ingresan la caontidad de 100 productos, entonces automaticamente se haran 2 registros del mismo producto con 50 cada uno.
+    	String nombre = producto.get("NOMBRE");
+    	String descripcion = producto.get("DESCRIPCION");
+    	Integer cantidad = Integer.valueOf(producto.get("CANTIDAD"));
+    	Integer maximoCantidad = 50;
+    	
+    	Connection con = new ConnectionFactory().recuperaConexion();
+    	
+    	//Comando para tomar el control de la transaccion: Transaction Para asegurar que se inserten todos los dato o no se inserte ninguno.
+    	
+    	con.setAutoCommit(false); //Para tomar el control de la transaccion
+    	
+		PreparedStatement statement = con.prepareStatement("INSERT INTO PRODUCTO (nombre, descripcion, cantidad)"
+							+ " VALUES (?, ?, ?)",
+							Statement.RETURN_GENERATED_KEYS);
 					
+		//Logica para cumplir la regla de negocio
+		
+		do {
+			int cantidadParaGuardar = Math.min(cantidad, maximoCantidad); // si cantidad = 100 y maximoCantidad = 50 El valor minimo sera: 50.  otro Ejemp: si cantidad = 40, maxCant = 50, el valor a guardar es: 40.
+			
+			ejecutaRegistro(nombre, descripcion, cantidadParaGuardar, statement);	//Funcion	
+			
+			cantidad -= maximoCantidad; // cantidad = cantidad - maximoCantidad //para asegurar que se ingresen 50 registros si es mas de 50, el resto se ingresa en el siguiente registro.
+			
+		}while(cantidad > 0);
+		
+		con.close(); //cerrar la conexion			
+		
 		
 		/* //Opcion: no segura para insert vulnerable a SQL Injection
 		 
@@ -158,17 +192,49 @@ public class ProductoController {
 					+ producto.get("DESCRIPCION") + "', "
 					+ producto.get("CANTIDAD") + ")", Statement.RETURN_GENERATED_KEYS); //")", cerrar el parentesis de la Query //Statement.RETURN_GENERATED_KEYS - Cuando se ejecuta un insert (se incrementa el id) obtiene el id generado con insert 
 		*/
-				
+		
+		
+		/*//Parte  siguiente del Bloque1
+		 //Funciona pero esta parte fue extraida e ingresada en el metodo ejecutaRegistro
+		
 		ResultSet resultSet = statement.getGeneratedKeys(); // Resultado de los id generados con la ejecucion de la Query
 		
 		while(resultSet.next()) {//while para obtener el valor del id generado
 				System.out.println(
 						String.format(
 							"Fue insertado el producto de ID %d",
-							 resultSet.getInt(1)));//posicion 1 para saber cual id fue generado
-										
+							 resultSet.getInt(1)));//posicion 1 para saber cual id fue generado										
 		}
-    } 
+		*/
+		
+    }
+
+
+	private void ejecutaRegistro(String nombre, String descripcion, Integer cantidad, PreparedStatement statement)
+			
+			throws SQLException {
+		
+	//	if(cantidad < 50) { //Lanzar un error cuando sean menor a 50 no se ejecutaria el codigo.
+	//		throw new RuntimeException("Ocurrio un error");
+	//	}
+		
+		statement.setString(1, nombre);							
+		statement.setString(2, descripcion);								
+		statement.setInt(3, cantidad);													
+		statement.execute();
+		
+	ResultSet resultSet = statement.getGeneratedKeys(); // Resultado de los id generados con la ejecucion de la Query
+		
+		while(resultSet.next()) {//while para obtener el valor del id generado
+				System.out.println(
+						String.format(
+							"Fue insertado el producto de ID %d",
+							 resultSet.getInt(1)));//posicion 1 para saber cual id fue generado										
+		}
+				
+	} 
+	
+	
 }
 
 
