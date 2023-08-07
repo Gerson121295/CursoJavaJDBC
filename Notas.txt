@@ -141,6 +141,14 @@ De la misma forma que hay, en JDBC, una interfaz para representar la conexión (
 también hay una interfaz que representa el pool de conexiones (javax.sql.DataSource);
 C3P0 es una implementación Java de un pool de conexiones.
 
+# - 5 Capa de Persistencia con DAO
+
+Nos hubicamos en ProductoController en el metodo guardar, seleccionamos el metodo guardar y clic
+derecho -> clic en Open Call Hierarchy -> abre una nueva ventana. -> esto para saber quienes estan
+llamando este metodo.
+
+
+
 
 
 
