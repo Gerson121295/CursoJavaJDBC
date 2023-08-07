@@ -42,6 +42,10 @@ JDBC, el usuario y la contraseña.
 - Clic en File --> Import --> Existing Maven Projects -> Elegir el proyecto en Browse -->
 -- Seleccionarlo --> Clic en Finish.
 
+---Archivos a enviar en un project son: src, .gitignore, pom.xml.
+
+"SELECT id, nombre, descripcion, cantidad FROM producto"
+
 
 
 
