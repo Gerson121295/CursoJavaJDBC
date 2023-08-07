@@ -1,7 +1,6 @@
 package com.alura.jdbc.controller;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -9,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.alura.jdbc.factory.ConnectionFactory;
 
 public class ProductoController {
 	
@@ -22,10 +23,8 @@ public class ProductoController {
 
 	public List<Map<String, String>> listar() throws SQLException {
 		
-		Connection con = DriverManager.getConnection(
-				//Conexion a la BD de MySQL
-				"jdbc:mysql://localhost/control_de_stock?useTimeZone=true&serverTimeZone=UTC",
-				"root", "admin");
+		
+		Connection con = new ConnectionFactory().recuperaConexion();
 		
 		Statement statement = con.createStatement(); //con este objeto podremos declarar el query para la consulta a la BD
 		
