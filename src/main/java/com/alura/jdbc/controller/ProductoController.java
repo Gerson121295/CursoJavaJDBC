@@ -52,12 +52,30 @@ public class ProductoController {
 		
 		return resultado; // Devolvemos la informacion
 	}
+	
 
-    public void guardar(Object producto) {
-		// TODO
-	}
-    
-
+    public void guardar(Map<String, String> producto) throws SQLException {
+		Connection con = new ConnectionFactory().recuperaConexion();
+	
+    //Logica de Insert con Statement
+		
+		Statement statement = con.createStatement();
+		
+		statement.execute("INSERT INTO PRODUCTO(nombre, descripcion, cantidad) " //No se escribe el id porque es auto_incremente en la BD
+					+ " VALUES('" + producto.get("NOMBRE") + "', '" //se agrego comillas simples debido a que es un String el campo nombre, comillas simples '' en BD señala un String y en java son las comillas dobles "" para el String
+					+ producto.get("DESCRIPCION") + "', "
+					+ producto.get("CANTIDAD") + ")", Statement.RETURN_GENERATED_KEYS); //")", cerrar el parentesis de la Query //Statement.RETURN_GENERATED_KEYS - Cuando se ejecuta un insert (se incrementa el id) obtiene el id generado con insert 
+		
+		ResultSet resultSet = statement.getGeneratedKeys(); // Resultado de los id generados con la ejecucion de la Query
+		
+		while(resultSet.next()) {//while para obtener el valor del id generado
+				System.out.println(
+						String.format(
+							"Fue insertado el producto de ID %d",
+							 resultSet.getInt(1)));//posicion 1 para saber cual id fue generado
+										
+		}
+    } 
 }
 
 
