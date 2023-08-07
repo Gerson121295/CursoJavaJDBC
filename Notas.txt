@@ -112,6 +112,16 @@ implemente la interfaz Autocloseable.
 
 
 
+- #4
+En un escenario donde múltiples clientes pueden acceder a una misma aplicación simultáneamente. 
+¿Cuál sería el mejor abordaje?
+
+Reutilizar un conjunto de conexiones de tamaño fijo o dinámico.
+ Esta es la estratégia de mantener un pool de conexiones. 
+Vamos a abrir una cantidad específica de conexiones y reutilizarlas.
+
+
+
 
 
 

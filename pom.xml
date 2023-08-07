@@ -18,6 +18,21 @@
 			<version>8.0.26</version>
 		</dependency>
 		
+		<!-- c3p0 - Dependencia para configurar un pool de conexiones-->
+		<dependency>
+			<groupId>com.mchange</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.9.5.5</version>		
+		</dependency>
+		
+		<!-- mchange-commons-java dar la posibilidad de agregar más detalles del datasource vía el log de la aplicación en la consola.-->
+		<dependency>
+			<groupId>com.mchange</groupId>
+			<artifactId>mchange-commons-java</artifactId>
+			<version>0.2.20</version>
+		</dependency>
+		
+		
 	</dependencies>
 	
 	<build>
