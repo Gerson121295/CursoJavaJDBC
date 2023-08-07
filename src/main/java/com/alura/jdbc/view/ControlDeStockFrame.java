@@ -186,14 +186,28 @@ public class ControlDeStockFrame extends JFrame {
 
         Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
                 .ifPresentOrElse(fila -> {
-                    Integer id = (Integer) modelo.getValueAt(tabla.getSelectedRow(), 0);
-                    String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 1);
-                    String descripcion = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
-
-                    this.productoController.modificar(nombre, descripcion, id);
+                    Integer ID = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
+                    String NOMBRE = (String) modelo.getValueAt(tabla.getSelectedRow(), 1);
+                    String DESCRIPCION = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
+                    Integer CANTIDAD = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 3).toString());
+                    
+                    int filasModificadas;
+                    
+                    try {
+                    	filasModificadas = this.productoController.modificar(NOMBRE, DESCRIPCION, CANTIDAD, ID);
+					} catch (SQLException e) {
+						e.printStackTrace();
+						throw new RuntimeException(e);
+					}
+                    
+                              
+                    JOptionPane.showMessageDialog(this, String.format("%d item modificado con éxito!", filasModificadas));
                 }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
+        
     }
 
+    
+    
     private void eliminar() {
         if (tieneFilaElegida()) {
             JOptionPane.showMessageDialog(this, "Por favor, elije un item");
@@ -216,16 +230,18 @@ public class ControlDeStockFrame extends JFrame {
 
                     JOptionPane.showMessageDialog(this, cantidadEliminada + "Item eliminado con éxito!");
                 }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
+        
     }
 
+    
     private void cargarTabla() {
     	try {
         var productos = this.productoController.listar();
         
         try {
             // Para enviar los valores a la pantalla
-             productos.forEach(producto -> modelo.addRow(new Object[] { producto.get("id"), producto.get("nombre"),
-             producto.get("descripcion"), producto.get("cantidad") }));
+             productos.forEach(producto -> modelo.addRow(new Object[] { producto.get("ID"), producto.get("NOMBRE"),
+             producto.get("DESCRIPCION"), producto.get("CANTIDAD") }));
         } catch (Exception e) {
             throw e;
         }
