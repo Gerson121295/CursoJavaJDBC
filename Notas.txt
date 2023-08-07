@@ -77,7 +77,9 @@ SQL Injection.
 
 
 
-
+-- ¿Cuál es el estándar de JDBC (del driver) para manejar transacciones de base de datos?
+Auto-Commit.
+Este es el estándar, que puede ser modificado por el método setAutoCommit, de la interfaz Connection
 
 
 

@@ -158,17 +158,24 @@ public class ProductoController {
 					
 		//Logica para cumplir la regla de negocio
 		
-		do {
-			int cantidadParaGuardar = Math.min(cantidad, maximoCantidad); // si cantidad = 100 y maximoCantidad = 50 El valor minimo sera: 50.  otro Ejemp: si cantidad = 40, maxCant = 50, el valor a guardar es: 40.
-			
-			ejecutaRegistro(nombre, descripcion, cantidadParaGuardar, statement);	//Funcion	
-			
-			cantidad -= maximoCantidad; // cantidad = cantidad - maximoCantidad //para asegurar que se ingresen 50 registros si es mas de 50, el resto se ingresa en el siguiente registro.
-			
-		}while(cantidad > 0);
+		try {
+			do {
+				int cantidadParaGuardar = Math.min(cantidad, maximoCantidad); // si cantidad = 100 y maximoCantidad = 50 El valor minimo sera: 50.  otro Ejemp: si cantidad = 40, maxCant = 50, el valor a guardar es: 40.
+				
+				ejecutaRegistro(nombre, descripcion, cantidadParaGuardar, statement);	//Funcion	
+				
+				cantidad -= maximoCantidad; // cantidad = cantidad - maximoCantidad //para asegurar que se ingresen 50 registros si es mas de 50, el resto se ingresa en el siguiente registro.
+				
+			}while(cantidad > 0);
+			con.commit(); //para garantizar que todos los comandos del ciclo while hallan sido ejecutados correctamente.
+			System.out.println("Commit");			
+		}catch(Exception e) {
+			con.rollback(); //Si hubo un erro y no se ejecutaron todas las lineas de codigo, se revierten las que se ejecutaron. Por lo tanto no habra registros, Es como no paso nada.	
+			System.out.println("Rollback");
+		}
 		
-		con.close(); //cerrar la conexion			
-		
+		statement.close(); //Cerrar el PreparedStatement
+		con.close(); //cerrar la conexion		
 		
 		/* //Opcion: no segura para insert vulnerable a SQL Injection
 		 
@@ -214,9 +221,9 @@ public class ProductoController {
 			
 			throws SQLException {
 		
-	//	if(cantidad < 50) { //Lanzar un error cuando sean menor a 50 no se ejecutaria el codigo.
-	//		throw new RuntimeException("Ocurrio un error");
-	//	}
+		if(cantidad < 50) { //Lanzar un error cuando sean menor a 50 no se ejecutaria el codigo.
+			throw new RuntimeException("Ocurrio un error");
+		}
 		
 		statement.setString(1, nombre);							
 		statement.setString(2, descripcion);								
