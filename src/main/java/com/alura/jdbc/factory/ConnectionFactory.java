@@ -31,6 +31,9 @@ public class ConnectionFactory {
 		pooledDataSource.setUser("root");
 		pooledDataSource.setPassword("admin");
 		
+		// Setear la cantidad maxima de conexiones en el pool.
+		pooledDataSource.setMaxPoolSize(10); //10 conexiones
+			
 		this.datasource = pooledDataSource;
 	}
 	

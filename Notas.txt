@@ -121,6 +121,31 @@ Reutilizar un conjunto de conexiones de tamaño fijo o dinámico.
 Vamos a abrir una cantidad específica de conexiones y reutilizarlas.
 
 
+-- Podemos der la tabla de conexion abiertas de los usuarios en MySQL.
+-Por consola CMD - Entramos a archivos de programa --> MySQL -> cd Bin --> nos logueamos en 
+MySQL --> ya dentro ejecutamos: show processlist     //mysql> show processlist
+
+
+-- En un pool de conexiones con 9 conexiones disponibles. Si todas las 9 conexiones 
+están ocupadas y entra una décima requisición, ¿el usuario logra conectarse?
+
+El décimo usuario va a esperar que una de las 9 conexiones se libere.
+En el momento que una conexión quede disponible, el décimo cliente va a tener su 
+requisición procesada.
+
+Lo que aprendimos:
+Utilizar el pool de conexiones es una buena práctica;
+El pool de conexiones controla la cantidad de conexiones abiertas entre la aplicación y la BD;
+Es normal que haya un mínimo y un máximo de conexiones.
+De la misma forma que hay, en JDBC, una interfaz para representar la conexión (java.sql.Connection), 
+también hay una interfaz que representa el pool de conexiones (javax.sql.DataSource);
+C3P0 es una implementación Java de un pool de conexiones.
+
+
+
+
+
+
 
 
 
