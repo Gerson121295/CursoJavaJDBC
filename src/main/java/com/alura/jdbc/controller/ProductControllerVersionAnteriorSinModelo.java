@@ -11,9 +11,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.alura.jdbc.factory.ConnectionFactory;
-import com.alura.jdbc.modelo.Producto;
 
-public class ProductoController {
+public class ProductControllerVersionAnteriorSinModelo {
+	
+	//Este es una copia de metodos de la clase ProductoController
 	
 	public int modificar(String nombre, String descripcion, Integer cantidad, Integer id) throws SQLException {
 		//Modificar
@@ -26,10 +27,10 @@ public class ProductoController {
 	    	
 		  //Evitando SQL Injection
 		    final PreparedStatement statement = con.prepareStatement("UPDATE PRODUCTO SET "
-		            + " NOMBRE = ?,"
-		            + " DESCRIPCION = ?,"
-		            + " CANTIDAD = ?"
-		            + " WHERE ID = ?");
+		            + " NOMBRE = ? "
+		            + ", DESCRIPCION = ? "
+		            + ", CANTIDAD = ? "
+		            + " WHERE ID = ? ");
 		    try(statement){		    
 			    statement.setString(1, nombre);
 			    statement.setString(2, descripcion);
@@ -142,8 +143,8 @@ public class ProductoController {
 	
 
 	
-   // public void guardar(Map<String, String> producto) throws SQLException { //definicion de recorrido por Map <String, String)
-    	public void guardar(Producto producto) throws SQLException { // Se le envia el objeto Producto
+    public void guardar(Map<String, String> producto) throws SQLException {
+    	
     	//Funciona este Bloque1.
     	//Connection con = new ConnectionFactory().recuperaConexion();
 
@@ -163,22 +164,10 @@ public class ProductoController {
 		
 	//Bloque de codigo anterior pero con Regla de negocio: 
 	//Codigo para cumplir la regla de negocio: Soporta 50 cajas de un producto por registro. Si se ingresan la caontidad de 100 productos, entonces automaticamente se haran 2 registros del mismo producto con 50 cada uno.
-    	
-    	/*//Codigo Utilizado para: public void guardar(Map<String, String> producto)
     	String nombre = producto.get("NOMBRE");
     	String descripcion = producto.get("DESCRIPCION");
     	Integer cantidad = Integer.valueOf(producto.get("CANTIDAD"));
     	Integer maximoCantidad = 50;
-    	*/
-    
-    
-    //codigo para: public void guardar(Producto producto) ahora es por objeto y se necesitará los Getters and Setters
-    /*   //Logica de negocio: Permite registrar solo 50 productos.
-    		var nombre = producto.getNombre();
-        	var descripcion = producto.getDescripcion();
-        	var cantidad = producto.getCantidad();
-        	final var maximoCantidad = 50;
-        */	
     	
     	//Connection con = new ConnectionFactory().recuperaConexion();
     	
@@ -200,27 +189,20 @@ public class ProductoController {
 		//Logica para cumplir la regla de negocio
 		try(statement){ //para el try-with-resources se agrego el try(statement)
 			//try { //Se elimino este try debido a que ya se tiene el que recibe statement del try-with-resource.
-				
-				//do {	//Logica de negocio: Permite registrar solo 50 productos.
-							 
-					//int cantidadParaGuardar = Math.min(cantidad, maximoCantidad); //Logica de negocio: Permite registrar solo 50 productos. // si cantidad = 100 y maximoCantidad = 50 El valor minimo sera: 50.  otro Ejemp: si cantidad = 40, maxCant = 50, el valor a guardar es: 40.
+				do {
+					int cantidadParaGuardar = Math.min(cantidad, maximoCantidad); // si cantidad = 100 y maximoCantidad = 50 El valor minimo sera: 50.  otro Ejemp: si cantidad = 40, maxCant = 50, el valor a guardar es: 40.
 					
-					//ejecutaRegistro(nombre, descripcion, cantidadParaGuardar, statement);	//Funcion ejecutarRegistro: A la Funcion usando Map anterior se necesitaba enviarle las variables que almacenaba la data.
+					ejecutaRegistro(nombre, descripcion, cantidadParaGuardar, statement);	//Funcion	
 					
-					ejecutaRegistro(producto, statement);	//Funcion ejecutarRegistro: A la Funcion Se le envia el objeto producto.
+					cantidad -= maximoCantidad; // cantidad = cantidad - maximoCantidad //para asegurar que se ingresen 50 registros si es mas de 50, el resto se ingresa en el siguiente registro.
 					
-					//cantidad -= maximoCantidad; //Logica de negocio: Permite registrar solo 50 productos. // cantidad = cantidad - maximoCantidad //para asegurar que se ingresen 50 registros si es mas de 50, el resto se ingresa en el siguiente registro.
-					
-				//}while(cantidad > 0);  	//Logica de negocio: Permite registrar solo 50 productos.
-						
+				}while(cantidad > 0);
 				con.commit(); //para garantizar que todos los comandos del ciclo while hallan sido ejecutados correctamente.
-				System.out.println("Commit");	
-				
+				System.out.println("Commit");			
 			}catch(Exception e) { //aqui cerraba el try que se elimino arriba
 				con.rollback(); //Si hubo un erro y no se ejecutaron todas las lineas de codigo, se revierten las que se ejecutaron. Por lo tanto no habra registros, Es como no paso nada.	
 				System.out.println("Rollback");
 			}
-		
 		} //llave del try
     	// } //llave del try, se elimino debido a que se elimino un try arriba.
 		
@@ -270,29 +252,19 @@ public class ProductoController {
     }
 
 
-	//private void ejecutaRegistro(String nombre, String descripcion, Integer cantidad, PreparedStatement statement)  //metodo anterior usando Map se le envia las variables que tendria la data.
-    private void ejecutaRegistro(Producto producto, PreparedStatement statement)  //Recibe el objeto Producto producto que contiene sus atributos.
-    		
+	private void ejecutaRegistro(String nombre, String descripcion, Integer cantidad, PreparedStatement statement)
+			
 			throws SQLException {
 		
 		//if(cantidad < 50) { //Lanzar un error cuando sean menor a 50 no se ejecutaria el codigo.
 		//	throw new RuntimeException("Ocurrio un error");
 		//}
-		/*codigo para -  private void ejecutaRegistro(String nombre, String descripcion, Integer cantidad, PreparedStatement statement)
+		
 		statement.setString(1, nombre);							
 		statement.setString(2, descripcion);								
 		statement.setInt(3, cantidad);													
 		statement.execute();
-		*/
-    	
-    	
-    	// codigo para -  private void ejecutaRegistro(Producto producto, PreparedStatement statement)
-		statement.setString(1, producto.getNombre());							
-		statement.setString(2, producto.getDescripcion());								
-		statement.setInt(3, producto.getCantidad());													
-		statement.execute();
-		
- 
+	
 		/*
 		//Funciona: Codigo simple sin try-with-resources para asegurar de cerrar la conexion
 		ResultSet resultSet = statement.getGeneratedKeys(); // Resultado de los id generados con la ejecucion de la Query
@@ -313,18 +285,10 @@ public class ProductoController {
 		final ResultSet resultSet = statement.getGeneratedKeys(); // Resultado de los id generados con la ejecucion de la Query
 		
 		try(resultSet){
-			while(resultSet.next()) {	//while para obtener el valor del id generado
-				
-				/*// Bloque de codigo para: //private void ejecutaRegistro(String nombre, String descripcion, Integer cantidad, PreparedStatement statement)  //metodo anterior usando Map se le envia las variables que tendria la data.		 
+			while(resultSet.next()) {//while para obtener el valor del id generado
 					System.out.println(String.format(
 								"Fue insertado el producto de ID %d",
 								 resultSet.getInt(1)));//posicion 1 para saber cual id fue generado										
-			*/
-				
-				 // Bloque de codigo para: private void ejecutaRegistro(Producto producto, PreparedStatement statement)
-					producto.setId(resultSet.getInt(1));
-					System.out.println(String.format("Fue insertado el producto %s", producto));
-			
 			}
 		}
 		
@@ -344,7 +308,5 @@ public class ProductoController {
 					
 	} 
 	
+
 }
-
-
-

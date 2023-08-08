@@ -1,4 +1,10 @@
 
+
+comandos:
+Ctrl + 3 - escribir ggas  // Genera los Getters and Setters
+Ctrl + 1
+
+
 ---- Proyecto Control de Stock --
 Configuracion de proyecto usando Eclipse
 
