@@ -298,6 +298,110 @@ public List<Map<String, String>> listar() throws SQLException {
 
 
 
+************   Desafío: Operaciones de modificación y exclusión en el ProductoDAO   ******************
+
+// ControlDeStockFrame
+private void modificar() {
+    if (tieneFilaElegida()) {
+        JOptionPane.showMessageDialog(this, "Por favor, elije un item");
+        return;
+    }
+
+    Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
+            .ifPresentOrElse(fila -> {
+                Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
+                String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 1);
+                String descripcion = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
+                Integer cantidad = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 3).toString());
+                var filasModificadas = this.productoController.modificar(nombre, descripcion, cantidad, id);
+
+                JOptionPane.showMessageDialog(this, String.format("%d item modificado con éxito!", filasModificadas));
+            }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
+}
+
+private void eliminar() {
+    if (tieneFilaElegida()) {
+        JOptionPane.showMessageDialog(this, "Por favor, elije un item");
+        return;
+    }
+
+    Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
+            .ifPresentOrElse(fila -> {
+                Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
+                var filasModificadas = this.productoController.eliminar(id);
+
+                modelo.removeRow(tabla.getSelectedRow());
+                JOptionPane.showMessageDialog(this,
+                        String.format("%d item eliminado con éxito!", filasModificadas));
+            }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
+}
+
+// ProductoController
+public int modificar(String nombre, String descripcion, Integer cantidad, Integer id) {
+    return productoDao.modificar(nombre, descripcion, cantidad, id);
+}
+
+public int eliminar(Integer id) {
+    return productoDao.eliminar(id);
+}
+
+
+
+// ProductoDAO
+public int eliminar(Integer id) {
+    try {
+        final PreparedStatement statement = con.prepareStatement("DELETE FROM PRODUCTO WHERE ID = ?");
+
+        try (statement) {
+            statement.setInt(1, id);
+            statement.execute();
+
+            int updateCount = statement.getUpdateCount();
+
+            return updateCount;
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    }
+}
+
+
+public int modificar(String nombre, String descripcion, Integer cantidad, Integer id) {
+    try {
+        final PreparedStatement statement = con.prepareStatement(
+                "UPDATE PRODUCTO SET "
+                + " NOMBRE = ?, "
+                + " DESCRIPCION = ?,"
+                + " CANTIDAD = ?"
+                + " WHERE ID = ?");
+
+        try (statement) {
+            statement.setString(1, nombre);
+            statement.setString(2, descripcion);
+            statement.setInt(3, cantidad);
+            statement.setInt(4, id);
+            statement.execute();
+
+            int updateCount = statement.getUpdateCount();
+
+            return updateCount;
+        }
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

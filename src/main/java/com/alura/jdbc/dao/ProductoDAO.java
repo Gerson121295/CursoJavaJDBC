@@ -331,6 +331,108 @@ public class ProductoDAO {
 						
 						// } //cierre del metodo public
 			}
+
+
+		    //Metodo Eliminar: Está logica y codigo estaba en ProductoController por refactorizacion se traslado para acá.
+			public int eliminar(Integer id)  {
+				
+				// Eliminar el producto
+				//Se agrego el try-with-resource para no cerrar la conexion manualmente, con esto JVM se encarga de cerrarla
+				//se define final por el try-with-resource
+				//final Connection con = new ConnectionFactory().recuperaConexion(); // No es necesario crear la conexion ya que está esta definida en el constructor de esta clase(ProductoDAO).
+				
+				try { //Se agrego este try en esta clase ProductoDAO
+				//try(con){ //se agrega esta linea de codigo con el try para el try-with-resource
+					//Evitando SQL Injection
+					
+					//se define final por el try-with-resource
+					final PreparedStatement statement = con.prepareStatement("DELETE FROM PRODUCTO WHERE ID = ?");
+						
+					try(statement){//se agrega esta linea de codigo con el try para el try-with-resource
+						statement.setInt(1, id);
+						statement.execute();
+						
+					/*	//Metodo vulnerable a SQL Injection
+						//Logica de Delete con Statement
+						Statement statement = con.createStatement();
+						
+						statement.execute("DELETE FROM PRODUCTO WHERE ID = " + id);
+						
+						// int updateCount = statement.getUpdateCount(); //devuelve un int el cual nos dice cuantas filas fueron modificadas. -- usado cuando el metodo es void
+						
+						return statement.getUpdateCount(); //devuelve un int el cual nos dice cuantas filas fueron modificadas. -- usado cuando el metodo es int y tiene return
+						
+						*/
+						
+						int updateCount = statement.getUpdateCount();
+						//con.close(); //cerrar la conexion manualmente. 
+						return updateCount;
+					}
+				}catch(SQLException e) {
+					throw new RuntimeException(e);
+				}
+				
+			}
+
+			
+			
+			//Metodo Modificar
+			public int modificar(String nombre, String descripcion, Integer cantidad, Integer id) {
+				//Por motivos de Refactorizacion el codigo de ProductoController se traslado para acá en ProductoDAO
+			
+			//public int modificar(String nombre, String descripcion, Integer cantidad, Integer id) throws SQLException {
+				//Modificar
+				//Connection con = new ConnectionFactory().recuperaConexion(); //crea la conexion
+				
+				/* no necesitamos la conexion debido a que en esta clase esta definidad en el constructor.
+				ConnectionFactory factory = new ConnectionFactory();
+			    final Connection con = factory.recuperaConexion();
+			    */
+				
+				try {
+			    //try(con){ //la conexion esta definida en el constructor
+			    	
+				  //Evitando SQL Injection
+				    final PreparedStatement statement = con.prepareStatement(
+				    		"UPDATE producto SET "
+				            + " nombre = ?, "
+				            + " descripcion = ?, "
+				            + " cantidad = ?"
+				            + " WHERE id = ?");
+				    
+				    try(statement) {		    
+					    statement.setString(1, nombre);
+					    statement.setString(2, descripcion);
+					    statement.setInt(3, cantidad);
+					    statement.setInt(4, id);
+			    
+					    statement.execute();
+			 /*   
+			  //Metodo vulnerable a SQL Injection
+			    	//Logica de Update con Statement
+				Statement statement = con.createStatement();
+				
+				statement.execute("UPDATE PRODUCTO SET "
+			            + " NOMBRE = '" + nombre + "'"
+			            + ", DESCRIPCION = '" + descripcion + "'"
+			            + ", CANTIDAD = " + cantidad
+			            + " WHERE ID = " + id);
+				*/
+			    
+						int updateCount = statement.getUpdateCount();
+						//con.close();
+						return updateCount;
+					
+						//return statement.getUpdateCount();
+				    }
+			    }catch (SQLException e) {
+			    	throw new RuntimeException(e);
+			    }
+			}
+			
+			
+			
+			
 }
 
 				

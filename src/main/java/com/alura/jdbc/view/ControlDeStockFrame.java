@@ -187,28 +187,20 @@ public class ControlDeStockFrame extends JFrame {
 
         Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
                 .ifPresentOrElse(fila -> {
-                    Integer ID = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
-                    String NOMBRE = (String) modelo.getValueAt(tabla.getSelectedRow(), 1);
-                    String DESCRIPCION = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
-                    Integer CANTIDAD = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 3).toString());
+                    Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
+                    String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 1);
+                    String descripcion = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
+                    Integer cantidad = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 3).toString());
                     
-                    int filasModificadas;
-                    
-                    try {
-                    	filasModificadas = this.productoController.modificar(NOMBRE, DESCRIPCION, CANTIDAD, ID);
-					} catch (SQLException e) {
-						e.printStackTrace();
-						throw new RuntimeException(e);
-					}
-                    
-                              
+                    var filasModificadas = this.productoController.modificar(nombre, descripcion, cantidad, id);
+		        
                     JOptionPane.showMessageDialog(this, String.format("%d item modificado con éxito!", filasModificadas));
                 }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
         
     }
 
     
-    
+    //Metodo Eliminar producto
     private void eliminar() {
         if (tieneFilaElegida()) {
             JOptionPane.showMessageDialog(this, "Por favor, elije un item");
@@ -219,17 +211,13 @@ public class ControlDeStockFrame extends JFrame {
                 .ifPresentOrElse(fila -> {
                     Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString()); //casteo para la comversion de string a integer
 
-                    int cantidadEliminada; //para saber cuantos fueron eliminados
-                    
-                    try {
-                    	cantidadEliminada = this.productoController.eliminar(id);
-					} catch (SQLException e) {
-						throw new RuntimeException(e);
-					}
-
+                    //Para saber cuantos fueron eliminados                                   
+                    var filasModificadas = this.productoController.eliminar(id);
+					
                     modelo.removeRow(tabla.getSelectedRow());
 
-                    JOptionPane.showMessageDialog(this, cantidadEliminada + "Item eliminado con éxito!");
+                    JOptionPane.showMessageDialog(this,
+                            String.format("%d item eliminado con éxito!", filasModificadas));
                 }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
         
     }
