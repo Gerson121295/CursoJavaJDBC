@@ -17,6 +17,14 @@ public class Producto {
 	}
 
 
+	public Producto(int id, String nombre, String descripcion, int cantidad) {
+		this.id = id;
+		this.nombre = nombre;
+		this.descripcion = descripcion;
+		this.cantidad = cantidad;
+	}
+
+
 	public String getNombre() {
 		return nombre;
 	}
@@ -47,6 +55,10 @@ public class Producto {
 	}
 	
 	
+	public Integer getId() {
+		return this.id;
+	}
+	
 	public void setId(int id) {
 		this.id = id;
 		
@@ -62,9 +74,6 @@ public class Producto {
 				this.descripcion,
 				this.cantidad);
 	}
-	
-	
-	
-	
+
 
 }

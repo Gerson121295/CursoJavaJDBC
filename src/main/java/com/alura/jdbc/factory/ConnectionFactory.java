@@ -40,8 +40,12 @@ public class ConnectionFactory {
 	
 	
 	 //Forma de conexion con el pool de conexiones
-	public Connection recuperaConexion() throws SQLException {
-		return this.datasource.getConnection();
+	public Connection recuperaConexion() {
+		try {
+			return this.datasource.getConnection();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 	
@@ -58,3 +62,7 @@ public class ConnectionFactory {
 	
 	
 }
+
+
+
+

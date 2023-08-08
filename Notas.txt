@@ -162,8 +162,10 @@ Tiene que ver con la capacidad de aislar en un lugar centralizado, toda la lógi
 al repositorio de datos de la entidad.
 Así estaremos evitando duplicación de código y centralización de la lógica.
 
+-- Patron MVC - Model Vista Controlador
+Modelo  <--> DAO <--> Controller --> View
 
-Modelo  <--> DAO <--> Controller -->
+
 
 
 

@@ -16,6 +16,15 @@ import com.alura.jdbc.modelo.Producto;
 
 public class ProductoController {
 	
+	private ProductoDAO productoDAO;
+	
+	
+	public ProductoController() { //Cuando se inicilialize este objeto creará una conexion
+		this.productoDAO = new ProductoDAO(new ConnectionFactory().recuperaConexion());
+				
+	}
+	
+	
 	public int modificar(String nombre, String descripcion, Integer cantidad, Integer id) throws SQLException {
 		//Modificar
 		//Connection con = new ConnectionFactory().recuperaConexion(); //crea la conexion
@@ -96,58 +105,19 @@ public class ProductoController {
 		
 	}
 
-	public List<Map<String, String>> listar() throws SQLException {
-		
-		//Agregando el try -with-resources para asegugar cerrar la conexion. Para no cerrarla manualmente. JVM se encarga de cerrarla.
-		//se definio como final para el try with resource
-		final Connection con = new ConnectionFactory().recuperaConexion();
-		
-		try(con){ //se agrego esta linea de codigo con el try para el try-with-resource
-				
-			//Evitando SQL Injection
-			//se definio como final para el try with resource
-			final PreparedStatement statement = con.prepareStatement("SELECT ID, NOMBRE, DESCRIPCION, CANTIDAD FROM PRODUCTO");
-
-			try(statement){  //se agrego esta linea de codigo con el try para el try-with-resource
-				statement.execute();
-			
-				
-	/*	//Metodo vulnerable a SQL Injection
-		Statement statement = con.createStatement(); //con este objeto podremos declarar el query para la consulta a la BD
-		
-		statement.execute("SELECT id, nombre, descripcion, cantidad FROM producto");
-		//execute devuelve un boolean  para indicar si el resultado del statement es un listado como el select devuelve un true, 
-		// si no retorna un false que seria un update, delete o insert.     
-	 */
-		
-				ResultSet resultSet = statement.getResultSet(); //Estado de resultado
-		
-				List<Map<String, String>> resultado = new ArrayList<>();
-		
-				while(resultSet.next()) {//Para poder ver el contenido para agregarlo al listado del resultado
-					Map<String, String> fila = new HashMap<>();
-					fila.put("ID", String.valueOf(resultSet.getInt("ID")));
-					fila.put("NOMBRE", resultSet.getString("NOMBRE"));
-					fila.put("DESCRIPCION", resultSet.getString("DESCRIPCION"));
-					fila.put("CANTIDAD", String.valueOf(resultSet.getInt("CANTIDAD")));
-					
-					resultado.add(fila);
-				}
-		
-				//con.close(); //cerramos la conexion //no es necesario cerrarla se agrego el try-with-resource la cierra automaticamente
-		
-				return resultado; // Devolvemos la informacion
-			}
-		}
+	//Metodo de Listar Productos
+	// public List<Map<String, String>> listar() {
+	public List<Producto> listar() {
+		//Se refactorizo el codigo y la logica se traslado a ProductoDAO		
+		return productoDAO.listar();
 	}
 	
 
 	
    // public void guardar(Map<String, String> producto) throws SQLException { //definicion de recorrido por Map <String, String)
-    	public void guardar(Producto producto) throws SQLException { // Se le envia el objeto Producto
+    	public void guardar(Producto producto){ // Se le envia el objeto Producto
     		//Se refactorizo el codigo y la logica se traslado a ProductoDAO
     		
-    		ProductoDAO productoDAO =  new ProductoDAO(new ConnectionFactory().recuperaConexion());  			
     		productoDAO.guardar(producto);
     	
     	}	

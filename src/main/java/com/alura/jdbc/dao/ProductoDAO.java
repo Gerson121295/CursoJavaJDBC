@@ -5,6 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.alura.jdbc.factory.ConnectionFactory;
 import com.alura.jdbc.modelo.Producto;
@@ -29,8 +33,8 @@ public class ProductoDAO {
 		this.con = con;
 	}
 	
-	public void guardar(Producto producto) throws SQLException {
-		
+	public void guardar(Producto producto){
+			//Logica y codigo estaba en ProductoController por Refactorizacion se movio aquí.
 		   // public void guardar(Map<String, String> producto) throws SQLException { //definicion de recorrido por Map <String, String)
 		   // 	public void guardar(Producto producto) throws SQLException { // Se le envia el objeto Producto   // Se Refactorizo y se movio este metodo que estaba en ProductoController
 		    	
@@ -80,39 +84,56 @@ public class ProductoDAO {
 		    	final Connection con = factory.recuperaConexion();
 		 	    	
 	*/	    	
-		    	try(con){//para el try-with-resources se agrego el try(con)
-			    	//Comando para tomar el control de la transaccion: Transaction Para asegurar que se inserten todos los dato o no se inserte ninguno.	
-			    	con.setAutoCommit(false); //Para tomar el control de la transaccion
-			    	
-			    	//para el try-with-resources se agrego final 
-			    	final PreparedStatement statement = con.prepareStatement("INSERT INTO PRODUCTO (nombre, descripcion, cantidad)"
-									+ " VALUES (?, ?, ?)",
-									Statement.RETURN_GENERATED_KEYS);
-							
-				//Logica para cumplir la regla de negocio
-				try(statement){ //para el try-with-resources se agrego el try(statement)
-					//try { //Se elimino este try debido a que ya se tiene el que recibe statement del try-with-resource.
+		    	try {
+					try(con){//para el try-with-resources se agrego el try(con)
 						
-						//do {	//Logica de negocio: Permite registrar solo 50 productos.
-									 
-							//int cantidadParaGuardar = Math.min(cantidad, maximoCantidad); //Logica de negocio: Permite registrar solo 50 productos. // si cantidad = 100 y maximoCantidad = 50 El valor minimo sera: 50.  otro Ejemp: si cantidad = 40, maxCant = 50, el valor a guardar es: 40.
-							
-							//ejecutaRegistro(nombre, descripcion, cantidadParaGuardar, statement);	//Funcion ejecutarRegistro: A la Funcion usando Map anterior se necesitaba enviarle las variables que almacenaba la data.
-							
-							ejecutaRegistro(producto, statement);	//Funcion ejecutarRegistro: A la Funcion Se le envia el objeto producto.
-							
-							//cantidad -= maximoCantidad; //Logica de negocio: Permite registrar solo 50 productos. // cantidad = cantidad - maximoCantidad //para asegurar que se ingresen 50 registros si es mas de 50, el resto se ingresa en el siguiente registro.
-							
-						//}while(cantidad > 0);  	//Logica de negocio: Permite registrar solo 50 productos.
+						/*//Codigo 1 para Transaccion 
+						//Comando para tomar el control de la transaccion: Transaction Para asegurar que se inserten todos los dato o no se inserte ninguno.	
+						con.setAutoCommit(false); //Para tomar el control de la transaccion
+						*/
+						
+						//para el try-with-resources se agrego final 
+						final PreparedStatement statement = con.prepareStatement(
+									"INSERT INTO PRODUCTO (nombre, descripcion, cantidad)"
+										+ " VALUES (?, ?, ?)",
+										Statement.RETURN_GENERATED_KEYS);
 								
-						con.commit(); //para garantizar que todos los comandos del ciclo while hallan sido ejecutados correctamente.
-						System.out.println("Commit");	
+						//Logica para cumplir la regla de negocio
+						try(statement){ //para el try-with-resources se agrego el try(statement)
+						//try { //Se elimino este try debido a que ya se tiene el que recibe statement del try-with-resource.
+							
+							//do {	//Logica de negocio: Permite registrar solo 50 productos.
+										 
+								//int cantidadParaGuardar = Math.min(cantidad, maximoCantidad); //Logica de negocio: Permite registrar solo 50 productos. // si cantidad = 100 y maximoCantidad = 50 El valor minimo sera: 50.  otro Ejemp: si cantidad = 40, maxCant = 50, el valor a guardar es: 40.
+								
+								//ejecutaRegistro(nombre, descripcion, cantidadParaGuardar, statement);	//Funcion ejecutarRegistro: A la Funcion usando Map anterior se necesitaba enviarle las variables que almacenaba la data.
+								
+								ejecutaRegistro(producto, statement);	//Funcion ejecutarRegistro: A la Funcion Se le envia el objeto producto.
+								
+								//cantidad -= maximoCantidad; //Logica de negocio: Permite registrar solo 50 productos. // cantidad = cantidad - maximoCantidad //para asegurar que se ingresen 50 registros si es mas de 50, el resto se ingresa en el siguiente registro.
+								
+							//}while(cantidad > 0);  	//Logica de negocio: Permite registrar solo 50 productos.
+							
+						/*//Codigo 2 para Transaccion 
+							con.commit(); //para garantizar que todos los comandos del ciclo while hallan sido ejecutados correctamente.
+							System.out.println("Commit");	
+						*/
+							
+						}catch(SQLException e) { //aqui cerraba el try que se elimino arriba
+							throw new RuntimeException(e);
 						
-					}catch(Exception e) { //aqui cerraba el try que se elimino arriba
-						con.rollback(); //Si hubo un erro y no se ejecutaron todas las lineas de codigo, se revierten las que se ejecutaron. Por lo tanto no habra registros, Es como no paso nada.	
-						System.out.println("Rollback");
+						/*//Codigo 3 para Transaccion 	
+							System.out.println("Rollback de la transaccion");
+							con.rollback(); //Si hubo un erro y no se ejecutaron todas las lineas de codigo, se revierten las que se ejecutaron. Por lo tanto no habra registros, Es como no paso nada.	
+						*/
+							
+						}
+					
 					}
-				
+					
+				} catch (SQLException e) { //Cierre del Primer Try
+					throw new RuntimeException(e);
+					
 				} //llave del try
 		    	// } //llave del try, se elimino debido a que se elimino un try arriba.
 				
@@ -236,9 +257,86 @@ public class ProductoDAO {
 			*/	
 				
 							
-			} 	
+			}
 		    
+		    
+		    // Metodo Listar  - Logica y codigo estaba en ProductoController por Refactorizacon se movio aqui.
+			
+		    public List<Producto> listar() { //Se mapea el objeto
+				List<Producto> resultado = new ArrayList<>();
+				
+		    
+		    //public List<Map<String, String>> listar() { //forma anterior
+			//	List<Map<String, String>> resultado = new ArrayList<>();
+				
+				//public List<Map<String, String>> listar() throws SQLException {
+							
+					//Agregando el try -with-resources para asegugar cerrar la conexion. Para no cerrarla manualmente. JVM se encarga de cerrarla.
+					//se definio como final para el try with resource
+					final Connection con = new ConnectionFactory().recuperaConexion();
+					
+					try(con){ //se agrego esta linea de codigo con el try para el try-with-resource
+							
+						//Evitando SQL Injection
+						//se definio como final para el try with resource
+						final PreparedStatement statement = con.prepareStatement("SELECT ID, NOMBRE, DESCRIPCION, CANTIDAD FROM PRODUCTO");
+
+						try(statement){  //se agrego esta linea de codigo con el try para el try-with-resource
+							statement.execute();
+						
+							
+				/*	//Metodo vulnerable a SQL Injection
+					Statement statement = con.createStatement(); //con este objeto podremos declarar el query para la consulta a la BD
+					
+					statement.execute("SELECT id, nombre, descripcion, cantidad FROM producto");
+					//execute devuelve un boolean  para indicar si el resultado del statement es un listado como el select devuelve un true, 
+					// si no retorna un false que seria un update, delete o insert.     
+				 */
+					
+							final ResultSet resultSet = statement.getResultSet(); //Estado de resultado
+					
+							//List<Map<String, String>> resultado = new ArrayList<>(); //Esta arriba al inicio del metodo.
+					
+							try(resultSet){ //se agrego estr try
+							while(resultSet.next()) {//Para poder ver el contenido para agregarlo al listado del resultado
+								
+								/*// anterior
+								Map<String, String> fila = new HashMap<>();
+								fila.put("ID", String.valueOf(resultSet.getInt("ID")));
+								fila.put("NOMBRE", resultSet.getString("NOMBRE"));
+								fila.put("DESCRIPCION", resultSet.getString("DESCRIPCION"));
+								fila.put("CANTIDAD", String.valueOf(resultSet.getInt("CANTIDAD")));
+							
+								resultado.add(fila);			
+								*/
+								
+								//Se asigna el objeto 
+								Producto fila = new Producto(resultSet.getInt("ID"),
+											resultSet.getString("NOMBRE"),
+											resultSet.getString("DESCRIPCION"),
+											resultSet.getInt("CANTIDAD"));
+									
+								resultado.add(fila);
+														
+							}
+						}
+					}
+					
+							//con.close(); //cerramos la conexion //no es necesario cerrarla se agrego el try-with-resource la cierra automaticamente
+					
+							return resultado; // Devolvemos la informacion
+						}catch(SQLException e) {
+							throw new RuntimeException(e);
+						}
+						
+						// } //cierre del metodo public
+			}
 }
+
+				
+					
+
+
 
 
 
