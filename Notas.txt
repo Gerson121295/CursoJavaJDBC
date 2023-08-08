@@ -153,6 +153,17 @@ Nos hubicamos en ProductoController en el metodo guardar, seleccionamos el metod
 derecho -> clic en Open Call Hierarchy -> abre una nueva ventana. -> esto para saber quienes estan
 llamando este metodo.
 
+El Patrón de diseño DAO. La finalidad de este patrón de diseño es tener un objeto que 
+tiene como responsabilidad acceder a la base de datos y realizar las operaciones necesarias 
+sobre la entidad.
+
+-- ¿Cuáles son las ventajas de utilizar clases con el estándar DAO?
+Tiene que ver con la capacidad de aislar en un lugar centralizado, toda la lógica de acceso 
+al repositorio de datos de la entidad.
+Así estaremos evitando duplicación de código y centralización de la lógica.
+
+
+Modelo  <--> DAO <--> Controller -->
 
 
 
