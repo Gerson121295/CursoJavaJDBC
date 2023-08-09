@@ -21,8 +21,6 @@ public class ProductoController {
 	public int modificar(String nombre, String descripcion, Integer cantidad, Integer id){
 		//Por refactorizacion de codigo la logica se traslado a ProductoDAO
 		return productoDAO.modificar(nombre, descripcion, cantidad, id);
-		
-		
 	}
 
 	
