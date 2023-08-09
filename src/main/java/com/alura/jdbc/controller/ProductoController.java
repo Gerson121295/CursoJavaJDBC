@@ -45,6 +45,7 @@ public class ProductoController {
 		return productoDAO.listar(categoria.getId());
 	}
 	
+	
 
 	/*
 	//Metodo para guardar producto sin referencia a otra entidad como categoria.

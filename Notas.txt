@@ -232,6 +232,27 @@ consultas hay la necesidad de buscar más informaciones de múltiples tablas, au
 exponencialmente. Eso impacta gravemente la performance de la aplicación y del sistema de base de datos.
 
 
+Utilizando INNER JOIN 
+
+Acá con la aplicación levantada, vamos a ver el reporte una vez más y acá tenemos nuestro reporte 
+ya con todo listo, todo ordenado acá, justamente como esperábamos.
+Y en la consola podemos ver que solamente fue ejecutada una query con el JOIN aprovechando 
+solamente una conexión para acceder a toda esta información.
+
+José creó una relación entre dos tablas utilizando la clave foránea. Pero ahora tiene una duda de 
+como hacer para buscar las informaciones relacionadas de las dos tablas en su aplicación. ¿Qué podemos 
+decir a José que haga para relacionar las dos tablas en una sola búsqueda?
+
+Con el INNER JOIN José va a lograr buscar las informaciones que están relacionadas entre las dos tablas.
+
+
+Lo que aprendimos en esta aula:
+
+- Cuando tenemos una relación entre tables debemos tener cuidado para no crear el problema de queries N + 1;
+- N + 1 quiere decir que, para buscar los datos de una relación, es ejecutada una query y luego una más 
+  por cada relación.
+- Este tipo de problema puede generar problemas de performance en la aplicación y en la base de datos.
+- Este tipo de problema puede ser evitado utilizando join en la query SQL.
 
 
 

@@ -17,13 +17,13 @@ public class ReporteFrame extends JFrame {
     private DefaultTableModel modelo;
 
     private CategoriaController categoriaController;
-    private ProductoController productoController; //Para relacionar los productos a las categorias
+   // private ProductoController productoController; //Solucion1: Queries N+1 - Para relacionar los productos a las categorias
 
     public ReporteFrame(ControlDeStockFrame controlDeStockFrame) {
         super("Reporte de produtos del stock");
 
         this.categoriaController = new CategoriaController();
-        this.productoController = new ProductoController();
+      //  this.productoController = new ProductoController(); //Solucion1: Queries N+1
         
         Container container = getContentPane();
         setLayout(null);
@@ -50,9 +50,12 @@ public class ReporteFrame extends JFrame {
         
         contenido.forEach(categoria -> {
         	modelo.addRow(new Object[] {categoria});
-        	
+        	/*//Codigo utilizado para solucion1 Queries N +  1 
         	var productos = this.productoController.listar(categoria);
-        	
+        	*/
+        	//Code Solucion 2 utilizando Inner Join
+        	var productos = categoria.getProductos();
+
         	productos.forEach(producto -> modelo.addRow(
         			new Object[] {
         					"", //para que aparezca una columna vacia

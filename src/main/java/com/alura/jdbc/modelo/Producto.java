@@ -26,6 +26,13 @@ public class Producto {
 	}
 
 
+	public Producto(int id, String nombre, int cantidad) {
+		this.id = id;
+		this.nombre = nombre;
+		this.cantidad = cantidad;
+	}
+
+
 	public String getNombre() {
 		return nombre;
 	}

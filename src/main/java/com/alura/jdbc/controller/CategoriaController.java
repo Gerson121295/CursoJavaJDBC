@@ -21,9 +21,20 @@ public class CategoriaController {
 		return categoriaDAO.listar();
 	}
 
+	
+	//Solucion 1: Metodo CargarReporte - Muestra los productos por categoria
+/*	// Usando Queries - Util para consultas sencilla, para complejas No es recomendable xq abre muchas conexiones a la BD. 
     public List<Categoria> cargaReporte() {
         return this.listar();
     }
-
+*/
+	
+	//Solucion 2: Metodo CargarReporte - Muestra los productos por categoria
+	// usando INNER JOIN  - Util para consultas sencilla y para complejas recomendable xq  no abre muchas conexiones a la BD. 
+	    public List<Categoria> cargaReporte() {
+	        return this.categoriaDAO.listarConProductos();
+	    }
+	
+	
 
 }
