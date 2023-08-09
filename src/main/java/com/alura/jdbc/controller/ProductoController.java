@@ -42,6 +42,8 @@ public class ProductoController {
 	
 
 	
+	/*
+	//Metodo para guardar producto sin referencia a otra entidad como categoria.
    // public void guardar(Map<String, String> producto) throws SQLException { //definicion de recorrido por Map <String, String)
     	public void guardar(Producto producto){ // Se le envia el objeto Producto
     		//Se refactorizo el codigo y la logica se traslado a ProductoDAO
@@ -49,6 +51,16 @@ public class ProductoController {
     		productoDAO.guardar(producto);
     	
     	}	
+    */	
+    	
+    	//Metodo para guardar producto con referencia a otra entidad categoria.
+    	   // public void guardar(Map<String, String> producto) throws SQLException { //definicion de recorrido por Map <String, String)
+    	    	public void guardar(Producto producto, Integer categoriaId){ // Se le envia el objeto Producto
+    	    		//Se refactorizo el codigo y la logica se traslado a ProductoDAO
+    	    		producto.setCategoriaId(categoriaId);
+    	    		productoDAO.guardar(producto);
+    	    	
+    	    	}
     	
 	
 }
