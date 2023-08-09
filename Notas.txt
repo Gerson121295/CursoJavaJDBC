@@ -2,8 +2,7 @@
 
 comandos:
 Ctrl + 3 - escribir ggas  // Genera los Getters and Setters
-Ctrl + 1
-
+Ctrl + 1 para crear la clase y metodos previamente antes definidos.
 
 ---- Proyecto Control de Stock --
 Configuracion de proyecto usando Eclipse
@@ -207,7 +206,7 @@ de negocio.
 
 
 ***** 6 - Evitando queries N + 1
-
+Un control o comando 1 para crear la clase o metodos ya definidos.
 
 
 
