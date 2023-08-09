@@ -20,9 +20,20 @@ public class CategoriaDAO {
 	public List<Categoria> listar() {
 		List<Categoria> resultado = new ArrayList<>();
 		try {
+			
+			//Para imprimir la query
+			var querySelect = "SELECT ID, NOMBRE FROM CATEGORIA";
+			System.out.println(querySelect);
+		
+			
+			/*// Si el codigo anterior de imprimir la query
 			final PreparedStatement statement = con.prepareStatement(
 					"SELECT ID, NOMBRE FROM CATEGORIA");
+			*/
 			
+			final PreparedStatement statement = con.prepareStatement(
+					querySelect);
+					
 			try (statement){
 				final ResultSet resultSet = statement.executeQuery(); //Otra forma de hacerlo 
 					try (resultSet){

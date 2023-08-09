@@ -430,11 +430,54 @@ public class ProductoDAO {
 			    	throw new RuntimeException(e);
 			    }
 			}
+
 			
 			
-			
-			
-}
+			  //Metodo para hacer busqueda de los productos por categoria - mostrar los Productos por categoria.
+				//Utiliza la misma logica que listar producto solo se le agrega un filtro en la consulta
+			public List<Producto> listar(Integer categoriaId) {
+				
+				List<Producto> resultado = new ArrayList<>();
+					
+				try {
+					//Evitando SQL Injection
+					
+					//Para imprimir la query
+					var querySelect = "SELECT ID, NOMBRE, DESCRIPCION, CANTIDAD "
+							+ " FROM PRODUCTO "
+							+ " WHERE CATEGORIA_ID = ?";
+					
+					System.out.println(querySelect);
+					
+					//se definio como final para el try with resource
+					final PreparedStatement statement = con
+							.prepareStatement(querySelect); // No es necesario el codigo a imprimir que tiene querySelect esa consulta va aqui en lugar de la variable querySelect
+
+					try(statement){  //se agrego esta linea de codigo con el try para el try-with-resource
+						statement.setInt(1, categoriaId);  //Busqueda de productos por la categoria
+						statement.execute();
+																					
+							final ResultSet resultSet = statement.getResultSet(); //Estado de resultado
+											
+							try(resultSet){ //se agrego estr try
+								while(resultSet.next()) {//Para poder ver el contenido para agregarlo al listado del resultado
+									
+									//Se asigna el objeto 
+									resultado.add(new Producto(
+										resultSet.getInt("ID"),
+										resultSet.getString("NOMBRE"),
+										resultSet.getString("DESCRIPCION"),
+										resultSet.getInt("CANTIDAD")));
+																															
+								}
+							}				
+					}			
+				} catch(SQLException e) {
+					throw new RuntimeException(e);
+				}
+				return resultado;
+			}
+	}
 
 				
 					

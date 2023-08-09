@@ -207,6 +207,29 @@ de negocio.
 
 ***** 6 - Evitando queries N + 1
 Un control o comando 1 para crear la clase o metodos ya definidos.
+Acá hice un clic y se abrió el reporte y tenemos acá un SELECT ID, NOMBRE FROM CATEGORÍA. Una vez en 
+la categoría, y una, dos, tres, cuatro selects a la tabla de producto. ¿Por qué? Como tenemos cuatro 
+categorías acá en el reporte, nosotros fuimos cuatro veces a la base de datos para buscar a sus productos.
+
+[12:03] Entonces acá nosotros estuvimos ejecutando cinco veces. O sea, tuvimos cinco conexiones a la 
+base de datos para poder imprimir este reporte. Entonces para hacer una búsqueda entre dos tablas que 
+son producto y categoría, estuvimos yendo varias veces a la base de datos, ahora en nuestro caso fueron 
+pocas veces.
+
+ Esta solución que desarrollamos no está siguiendo las buenas prácticas de programación porque resolvimos 
+un problema, pero creamos otros. Esta situación es conocida como queries N + 1, que es cuando para 
+ejecutar una cierta funcionalidad, estamos yendo a la base de datos más de lo que es necesario cuando 
+hay la posibilidad de ir una sola vez.
+
+
+
+- ¿Cuál es el problema de la aplicación tener queries N + 1?
+
+Porque son utilizadas múltiples queries, aumentando la cantidad de acceso a la base de datos y, 
+por consecuencia, empeorando la performance de la aplicación y del propio sistema de base de datos.
+Cuando las consultas son sencillas no hay problemas. Pero cuanto más complejidad van teniendo nuestras 
+consultas hay la necesidad de buscar más informaciones de múltiples tablas, aumentando el acceso 
+exponencialmente. Eso impacta gravemente la performance de la aplicación y del sistema de base de datos.
 
 
 

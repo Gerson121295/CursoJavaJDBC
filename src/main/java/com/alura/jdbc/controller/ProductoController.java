@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.alura.jdbc.dao.ProductoDAO;
 import com.alura.jdbc.factory.ConnectionFactory;
+import com.alura.jdbc.modelo.Categoria;
 import com.alura.jdbc.modelo.Producto;
 
 public class ProductoController {
@@ -31,17 +32,20 @@ public class ProductoController {
 	}
 	
 	
-
-
 	//Metodo de Listar Productos
-	// public List<Map<String, String>> listar() {
-	public List<Producto> listar() {
-		//Se refactorizo el codigo y la logica se traslado a ProductoDAO		
-		return productoDAO.listar();
+		// public List<Map<String, String>> listar() {
+		public List<Producto> listar() {
+			//Se refactorizo el codigo y la logica se traslado a ProductoDAO		
+			return productoDAO.listar();
+		}
+		
+	
+	  //Metodo para hacer busqueda de los productos por categoria - mostrar los Productos por categoria.
+	public List<Producto> listar(Categoria categoria){
+		return productoDAO.listar(categoria.getId());
 	}
 	
 
-	
 	/*
 	//Metodo para guardar producto sin referencia a otra entidad como categoria.
    // public void guardar(Map<String, String> producto) throws SQLException { //definicion de recorrido por Map <String, String)
@@ -63,6 +67,9 @@ public class ProductoController {
     	    	}
     	
 	
+        	
+    	    	
+    	    	
 }
 
 
